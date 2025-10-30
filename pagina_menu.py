@@ -28,9 +28,31 @@ Cada prato é uma oferenda inspirada na dualidade da bruxa Morgana: cura e maldi
                                justify="center")
         titulo_II.pack(pady=(20,0))
 
+#______________________________________________________________________________________________________________________________
         frame_nome = ttk.Frame(style="Vapor")
-        frame_nome.pack()
+        frame_nome.pack(pady=(25,0))
 
+        ttk.Label(frame_nome, text="Nome do prato: ", font=("Times New Roman", 15), foreground="#8400ff").pack(side = "left")
+        ttk.Entry(frame_nome, width=60,font=("Times New Roman",15)).pack(side = "right")
+#------------------------------------------------------------------------------------------------------------------------------
+        frame_categoria = ttk.Frame(style="Vapor")
+        frame_categoria.pack(pady=(25,0))
+
+        ttk.Label(frame_categoria, text="Descrição do prato: ", font=("Times New Roman", 15), foreground="#8400ff").pack(side = "left")
+        ttk.Entry(frame_categoria, width=60,font=("Times New Roman",15)).pack(side = "right")
+#------------------------------------------------------------------------------------------------------------------------------
+        frame_preco = ttk.Frame(style="Vapor")
+        frame_preco.pack(pady=(25,0))
+
+        ttk.Label(frame_preco, text="Valor do prato: ", font=("Times New Roman", 15), foreground="#8400ff").pack(side = "left")
+        ttk.Entry(frame_preco, width=60,font=("Times New Roman",15)).pack(side = "right")
+#------------------------------------------------------------------------------------------------------------------------------
+        frame_categoria = ttk.Frame(style="Vapor")
+        frame_categoria.pack(pady=(25,0))
+
+        ttk.Label(frame_categoria, text="Categoria do prato: ", font=("Times New Roman", 15), foreground="#8400ff").pack(side = "left")
+        ttk.Entry(frame_categoria, width=60,font=("Times New Roman",15)).pack(side = "right")
+#_______________________________________________________________________________________________________________________________
 
 #__Mantendo a janela aberta_______________________________________________________________________________________________________________
     def run(self):
