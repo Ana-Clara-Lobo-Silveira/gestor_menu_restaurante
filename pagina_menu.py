@@ -21,8 +21,8 @@ Preparado para construir nosso menu?""",
         titulo_I.pack(pady=(20, 0))
 
         titulo_II = ttk.Label(text="""O restaurante nasceu de um grimório esquecido, que detalhava as receitas e elixires da poderosa feiticeira Morgana Le Fay. 
-Diz-se que o local foi erguido sobre suas cinzas, um portal para o conhecimento arcano e banquetes proibidos. 
-Cada prato é uma oferenda inspirada na dualidade da bruxa Morgana: cura e maldição, luz e sombra.""",
+Diz-se que o local foi erguido sobre suas cinzas, um portal para o conhecimento arcano e banquetes proibidos. Cada 
+prato é uma oferenda inspirada na dualidade da bruxa Morgana: cura e maldição, luz e sombra.""",
                                font=("Times New Roman", 15),
                                foreground="#8400ff",
                                justify="center")
@@ -53,6 +53,16 @@ Cada prato é uma oferenda inspirada na dualidade da bruxa Morgana: cura e maldi
         ttk.Label(frame_categoria, text="Categoria do prato: ", font=("Times New Roman", 15), foreground="#8400ff").pack(side = "left")
         ttk.Entry(frame_categoria, width=60,font=("Times New Roman",15)).pack(side = "right")
 #_______________________________________________________________________________________________________________________________
+        tv = ttk.Treeview(self.pagina)
+        tv.pack(pady=(25,0))
+
+        tv["columns"] = ("nome", "descricao", "valor", "categoria")
+        tv ["show"] = "headings"
+        tv.heading("nome", text="Nome do prato")
+        tv.heading("descricao", text="Descrição")
+        tv.heading("valor", text="Valor")
+        tv.heading("categoria", text="Categorias")
+
 
 #__Mantendo a janela aberta_______________________________________________________________________________________________________________
     def run(self):
