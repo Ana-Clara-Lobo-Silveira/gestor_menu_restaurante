@@ -65,7 +65,7 @@ prato é uma oferenda inspirada na dualidade da bruxa Morgana: cura e maldição
         tv.heading("descricao", text="Descrição")
         tv.heading("valor", text="Valor")
         tv.heading("categoria", text="Categorias")
-
+#------------------------------------------------------------------------------------------------------------------------------
         conexao = sqlite3.connect("./bd_menu_restaurante.sqlite")
         cursor = conexao.cursor()
 
@@ -79,8 +79,8 @@ prato é uma oferenda inspirada na dualidade da bruxa Morgana: cura e maldição
                                     );
                                 """
         
-        cursor.execute(sql_para_criar_tabela) #criar tabela
-        conexao.commit() #comitar as alterações
+        cursor.execute(sql_para_criar_tabela)
+        conexao.commit()
         conexao.close()
 #_________________________________________________________________________________________________________________________________________
         frame_botoes = ttk.Frame(frame_tv_b, style="Vapor")
