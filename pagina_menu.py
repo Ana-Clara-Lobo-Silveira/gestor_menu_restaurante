@@ -53,8 +53,11 @@ prato é uma oferenda inspirada na dualidade da bruxa Morgana: cura e maldição
         ttk.Label(frame_categoria, text="Categoria do prato: ", font=("Times New Roman", 15), foreground="#8400ff").pack(side = "left")
         ttk.Entry(frame_categoria, width=60,font=("Times New Roman",15)).pack(side = "right")
 #_______________________________________________________________________________________________________________________________
-        tv = ttk.Treeview(self.pagina)
-        tv.pack(pady=(25,0))
+        frame_tv_b = ttk.Frame(style="Vapor")
+        frame_tv_b.pack(pady=(0,0))
+      
+        tv = ttk.Treeview(frame_tv_b)
+        tv.pack(pady=(25,0), side="left")
 
         tv["columns"] = ("nome", "descricao", "valor", "categoria")
         tv ["show"] = "headings"
@@ -62,8 +65,14 @@ prato é uma oferenda inspirada na dualidade da bruxa Morgana: cura e maldição
         tv.heading("descricao", text="Descrição")
         tv.heading("valor", text="Valor")
         tv.heading("categoria", text="Categorias")
+#_________________________________________________________________________________________________________________________________________
 
+        frame_botoes = ttk.Frame(frame_tv_b, style="Vapor")
+        frame_botoes.pack(pady=(0,0), side="right")
 
+        ttk.Button(frame_botoes, text="Adicionar",width=40,padding = 9).pack(pady=(5,0), padx=20)
+        ttk.Button(frame_botoes, text="Alterar",width=40,padding = 9).pack(pady=(5,0), padx=20)
+        ttk.Button(frame_botoes, text="Excluir",width=40,padding = 9).pack(pady=(5,0), padx=20)
 #__Mantendo a janela aberta_______________________________________________________________________________________________________________
     def run(self):
         self.pagina.mainloop()
