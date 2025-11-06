@@ -71,6 +71,7 @@ prato é uma oferenda inspirada na dualidade da bruxa Morgana: cura e maldição
                 self.tv.heading("descricao", text="Descrição")
                 self.tv.heading("valor", text="Valor")
                 self.tv.heading("categoria", text="Categorias")
+                self.tv.bind("<<TreeviewSelect>>", self.alterar_bind)
         #------------------------------------------------------------------------------------------------------------------------------
                 conexao = sqlite3.connect("./bd_menu_restaurante.sqlite")
                 cursor = conexao.cursor()
@@ -146,7 +147,6 @@ prato é uma oferenda inspirada na dualidade da bruxa Morgana: cura e maldição
                 iid_s  = s_e[0]
                 item_valores = self.tv.item(iid_s, 'values')
                 codigo_do_registro = item_valores[0]
-                self.tv.delete(s_e)
 
                 self.conexao_IV = sqlite3.connect("bd_menu_restaurante.sqlite")
                 self.cursor_IV = self.conexao_IV.cursor()
@@ -156,32 +156,46 @@ prato é uma oferenda inspirada na dualidade da bruxa Morgana: cura e maldição
                                         """
 
                 self.cursor_IV.execute(sql_para_excluir, [codigo_do_registro])
+                self.tv.delete(s_e)
                 self.conexao_IV.commit()
                 self.conexao_IV.close()
 #-----------------------------------------------------------------------------------------------------------------------------------------
+        def alterar_bind(self,event):
+                s_e = self.tv.selection()
+                iid_s  = s_e[0]
+                item_valores = self.tv.item(iid_s, 'values')
+                self.e_nome.insert(0, item_valores[1])
+                self.e_descricao.insert(0, item_valores[2])
+                self.e_valor.insert(0, item_valores[3])
+                self.e_categoria.insert(0, item_valores[4])
+
         def alterar(self):
                 s_e = self.tv.selection()
+                iid_s  = s_e[0]
+                item_valores = self.tv.item(iid_s, 'values')
+                codigo_do_registro_II = item_valores[0]
+
 
                 self.n_II = self.e_nome.get()
                 self.d_II = self.e_descricao.get()
                 self.v_II = self.e_valor.get()
-                self.c_II = self.e_categoria.get()   
+                self.c_II = self.e_categoria.get()        
 
-                self.tv.insert("","end", values=(self.n_II, self.d_II, self.v_II, self.c_II))
                 conexao_III = sqlite3.connect("bd_menu_restaurante.sqlite")
                 cursor_III = conexao_III.cursor()
 
-                sql_para_alterar_itens = (f"""
+                sql_para_alterar_itens = """
                                         UPDATE menu
-                                        SET nome = ? and descricao = ? and preco = ? and categoria = ?
-                                        WHERE codigo = {s_e}
-                                        """)
+                                        SET nome = ?, descricao = ?, preco = ?, categoria = ?
+                                        WHERE codigo = ?
+                                        """
 
-                cursor_III.execute(sql_para_alterar_itens, [self.n_II, self.d_II,self.v_II,self.c_II])
+                cursor_III.execute(sql_para_alterar_itens, [self.n_II, self.d_II,self.v_II,self.c_II,codigo_do_registro_II])
                 conexao_III.commit()
                 conexao_III.close()
                 self.atualizar_tv()     
 
+   
 #__Mantendo a janela aberta_______________________________________________________________________________________________________________
         def run(self):
                 self.pagina.mainloop()
