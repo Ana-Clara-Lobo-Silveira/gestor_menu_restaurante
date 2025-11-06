@@ -56,6 +56,7 @@ prato é uma oferenda inspirada na dualidade da bruxa Morgana: cura e maldição
                 ttk.Label(frame_categoria, text="Categoria do prato: ", font=("Times New Roman", 15), foreground="#8400ff").pack(side = "left")
                 self.e_categoria = ttk.Entry(frame_categoria, width=60,font=("Times New Roman",15))
                 self.e_categoria.pack(side = "right")
+                self.e_categoria.pack(side = "right")
         #_______________________________________________________________________________________________________________________________
                 frame_tv_b = ttk.Frame(style="Vapor")
                 frame_tv_b.pack(pady=(0,0))
@@ -63,8 +64,9 @@ prato é uma oferenda inspirada na dualidade da bruxa Morgana: cura e maldição
                 self.tv = ttk.Treeview(frame_tv_b)
                 self.tv.pack(pady=(25,0), side="left")
 
-                self.tv["columns"] = ("nome", "descricao", "valor", "categoria")
+                self.tv["columns"] = ("codigo","nome", "descricao", "valor", "categoria")
                 self.tv ["show"] = "headings"
+                self.tv.heading("codigo", text="Cod")
                 self.tv.heading("nome", text="Nome do prato")
                 self.tv.heading("descricao", text="Descrição")
                 self.tv.heading("valor", text="Valor")
@@ -94,9 +96,10 @@ prato é uma oferenda inspirada na dualidade da bruxa Morgana: cura e maldição
                 frame_botoes = ttk.Frame(frame_tv_b, style="Vapor")
                 frame_botoes.pack(pady=(0,0), side="right")
 
-                ttk.Button(frame_botoes, text="Adicionar",width=40,padding = 9,command=self.adicionar).pack(pady=(5,0), padx=20)
-                ttk.Button(frame_botoes, text="Alterar",width=40,padding = 9).pack(pady=(5,0), padx=20)
+                ttk.Button(frame_botoes, text="Adicionar",width=40,padding = 9,command=self.adicionar).pack(pady=(7,0), padx=20)
+                ttk.Button(frame_botoes, text="Alterar",width=40,padding = 9, command=self.alterar).pack(pady=(5,0), padx=20)
                 ttk.Button(frame_botoes, text="Excluir",width=40,padding = 9, command=self.excluir).pack(pady=(5,0), padx=20)
+                # ttk.Button(frame_botoes, text="Exportar menu",width=40,padding = 9).pack(pady=(5,0), padx=20)
 
         def atualizar_tv(self):
 
@@ -107,7 +110,7 @@ prato é uma oferenda inspirada na dualidade da bruxa Morgana: cura e maldição
                 self.conexao_III = sqlite3.connect("bd_menu_restaurante.sqlite")
                 self.cursor_III = self.conexao_III.cursor()
                 self.sql_atualizar_tv = """
-                                                SELECT nome, descricao, preco, categoria from menu;  
+                                                SELECT codigo, nome, descricao, preco, categoria from menu;  
                                         """
                 self.cursor_III.execute(self.sql_atualizar_tv)
 
@@ -149,13 +152,35 @@ prato é uma oferenda inspirada na dualidade da bruxa Morgana: cura e maldição
                 self.cursor_IV = self.conexao_IV.cursor()
 
                 sql_para_excluir = """
-                                        DELETE FROM menu WHERE nome = ?;
+                                        DELETE FROM menu WHERE codigo = ?;
                                         """
 
                 self.cursor_IV.execute(sql_para_excluir, [codigo_do_registro])
                 self.conexao_IV.commit()
                 self.conexao_IV.close()
 #-----------------------------------------------------------------------------------------------------------------------------------------
+        def alterar(self):
+                s_e = self.tv.selection()
+
+                self.n_II = self.e_nome.get()
+                self.d_II = self.e_descricao.get()
+                self.v_II = self.e_valor.get()
+                self.c_II = self.e_categoria.get()   
+
+                self.tv.insert("","end", values=(self.n_II, self.d_II, self.v_II, self.c_II))
+                conexao_III = sqlite3.connect("bd_menu_restaurante.sqlite")
+                cursor_III = conexao_III.cursor()
+
+                sql_para_alterar_itens = (f"""
+                                        UPDATE menu
+                                        SET nome = ? and descricao = ? and preco = ? and categoria = ?
+                                        WHERE codigo = {s_e}
+                                        """)
+
+                cursor_III.execute(sql_para_alterar_itens, [self.n_II, self.d_II,self.v_II,self.c_II])
+                conexao_III.commit()
+                conexao_III.close()
+                self.atualizar_tv()     
 
 #__Mantendo a janela aberta_______________________________________________________________________________________________________________
         def run(self):
