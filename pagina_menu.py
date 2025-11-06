@@ -140,17 +140,19 @@ prato é uma oferenda inspirada na dualidade da bruxa Morgana: cura e maldição
 
         def excluir(self):
                 s_e = self.tv.selection()
+                iid_s  = s_e[0]
+                item_valores = self.tv.item(iid_s, 'values')
+                codigo_do_registro = item_valores[0]
                 self.tv.delete(s_e)
 
                 self.conexao_IV = sqlite3.connect("bd_menu_restaurante.sqlite")
                 self.cursor_IV = self.conexao_IV.cursor()
 
                 sql_para_excluir = """
-                                        DELETE FROM menu WHERE 
-                                        );
+                                        DELETE FROM menu WHERE nome = ?;
                                         """
 
-                self.cursor_IV.execute(sql_para_excluir)
+                self.cursor_IV.execute(sql_para_excluir, [codigo_do_registro])
                 self.conexao_IV.commit()
                 self.conexao_IV.close()
 #-----------------------------------------------------------------------------------------------------------------------------------------
