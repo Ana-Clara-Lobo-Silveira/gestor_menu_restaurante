@@ -100,7 +100,7 @@ prato é uma oferenda inspirada na dualidade da bruxa Morgana: cura e maldição
                 ttk.Button(frame_botoes, text="Adicionar",width=40,padding = 9,command=self.adicionar).pack(pady=(7,0), padx=20)
                 ttk.Button(frame_botoes, text="Alterar",width=40,padding = 9, command=self.alterar).pack(pady=(5,0), padx=20)
                 ttk.Button(frame_botoes, text="Excluir",width=40,padding = 9, command=self.excluir).pack(pady=(5,0), padx=20)
-                # ttk.Button(frame_botoes, text="Exportar menu",width=40,padding = 9).pack(pady=(5,0), padx=20)
+                ttk.Button(frame_botoes, text="Exportar menu",width=40,padding = 9, command=self.exportar_menu).pack(pady=(5,0), padx=20)
 
         def atualizar_tv(self):
 
@@ -168,7 +168,7 @@ prato é uma oferenda inspirada na dualidade da bruxa Morgana: cura e maldição
                 self.e_descricao.insert(0, item_valores[2])
                 self.e_valor.insert(0, item_valores[3])
                 self.e_categoria.insert(0, item_valores[4])
-
+#-----------------------------------------------------------------------------------------------------------------------------------------
         def alterar(self):
                 s_e = self.tv.selection()
                 iid_s  = s_e[0]
@@ -194,7 +194,24 @@ prato é uma oferenda inspirada na dualidade da bruxa Morgana: cura e maldição
                 conexao_III.commit()
                 conexao_III.close()
                 self.atualizar_tv()     
+#-----------------------------------------------------------------------------------------------------------------------------------------
+        def exportar_menu(self):
+                self.conexao_IV = sqlite3.connect("bd_menu_restaurante.sqlite")
+                self.cursor_IV = self.conexao_IV.cursor()
+                self.sql_coleta_dados_menu = """
+                                                SELECT codigo, nome, descricao, preco, categoria from menu;  
+                                        """
+                self.cursor_IV.execute(self.sql_coleta_dados_menu)
+                dados = self.cursor_IV.fetchall()
+                nome_colunas = [coluna [0] for coluna in self.cursor_IV.description]
 
+                with open("menu.txt", "w",encoding="utf-8") as menu:
+                        menu.write ("  |  ".join(nome_colunas) + "\n")
+                        for linha in dados:
+                                menu.write(f"{linha} + \n")
+
+                self.conexao_III.close()
+        
    
 #__Mantendo a janela aberta_______________________________________________________________________________________________________________
         def run(self):

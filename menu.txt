@@ -1,0 +1,3 @@
+codigo  |  nome  |  descricao  |  preco  |  categoria
+(11, 'aaaaaaaaa', 'aaaaaaaaaaaaa', 'aaaaaaaaaaaa', 'aaaaaaaaaaaaaa') + 
+(12, 'bbbbbbbbb', 'bbbbbbbbbbbb', 'bbbbbbbbbbbbbbbb', 'bbbbbbbbbbb') + 
