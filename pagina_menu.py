@@ -208,7 +208,7 @@ prato é uma oferenda inspirada na dualidade da bruxa Morgana: cura e maldição
                 with open("menu.txt", "w",encoding="utf-8") as menu:
                         menu.write ("  |  ".join(nome_colunas) + "\n")
                         for linha in dados:
-                                menu.write(f"{linha} + \n")
+                                menu.write(" | ".join(map(str, linha)) + "\n")
 
                 self.conexao_III.close()
         
