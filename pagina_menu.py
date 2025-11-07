@@ -122,48 +122,69 @@ prato é uma oferenda inspirada na dualidade da bruxa Morgana: cura e maldição
                         self.tv.insert("","end", values = linha)
 
         def adicionar(self):
-                
                 self.n = self.e_nome.get()
                 self.d = self.e_descricao.get()
                 self.v = self.e_valor.get()
                 self.c = self.e_categoria.get()
 
+                if self.n == "" or self.d == "" or self.v == "" or self.c == "":
+                        tkinter.messagebox.showerror(title="Erro", message="É necessário preencher todos os campos!")
+                else:
+                        conexao_II = sqlite3.connect("bd_menu_restaurante.sqlite")
+                        cursor_II = conexao_II.cursor()
 
-                conexao_II = sqlite3.connect("bd_menu_restaurante.sqlite")
-                cursor_II = conexao_II.cursor()
+                        sql_para_inserir_itens = """
+                                                        INSERT INTO menu (nome, descricao, preco, categoria)
+                                                        VALUES (?,?,?,?);
+                                                """
 
-                sql_para_inserir_itens = """
-                                                INSERT INTO menu (nome, descricao, preco, categoria)
-                                                VALUES (?,?,?,?);
-                                        """
+                        cursor_II.execute(sql_para_inserir_itens, [self.n,self.d,self.v,self.c])
+                        conexao_II.commit()
+                        conexao_II.close()
+                        self.atualizar_tv()
 
-                cursor_II.execute(sql_para_inserir_itens, [self.n,self.d,self.v,self.c])
-                conexao_II.commit()
-                conexao_II.close()
-                self.atualizar_tv()
+                        self.e_nome.delete(0, ttk.END)
+                        self.e_descricao.delete(0, ttk.END)
+                        self.e_categoria.delete(0, ttk.END)
+                        self.e_valor.delete(0, ttk.END)
+
+
 
         def excluir(self):
                 s_e = self.tv.selection()
-                iid_s  = s_e[0]
-                item_valores = self.tv.item(iid_s, 'values')
-                codigo_do_registro = item_valores[0]
+                if s_e:
+                        iid_s  = s_e[0]
+                        item_valores = self.tv.item(iid_s, 'values')
+                        codigo_do_registro = item_valores[0]
 
-                self.conexao_IV = sqlite3.connect("bd_menu_restaurante.sqlite")
-                self.cursor_IV = self.conexao_IV.cursor()
+                        self.conexao_IV = sqlite3.connect("bd_menu_restaurante.sqlite")
+                        self.cursor_IV = self.conexao_IV.cursor()
 
-                sql_para_excluir = """
-                                        DELETE FROM menu WHERE codigo = ?;
-                                        """
+                        sql_para_excluir = """
+                                                DELETE FROM menu WHERE codigo = ?;
+                                                """
 
-                self.cursor_IV.execute(sql_para_excluir, [codigo_do_registro])
-                self.tv.delete(s_e)
-                self.conexao_IV.commit()
-                self.conexao_IV.close()
+                        self.cursor_IV.execute(sql_para_excluir, [codigo_do_registro])
+                        self.tv.delete(s_e)
+                        self.conexao_IV.commit()
+                        self.conexao_IV.close()
+
+                        self.e_nome.delete(0, ttk.END)
+                        self.e_descricao.delete(0, ttk.END)
+                        self.e_categoria.delete(0, ttk.END)
+                        self.e_valor.delete(0, ttk.END)
+                else:
+                        tkinter.messagebox.showerror(title="Erro", message="É necessário selecionar um item!")
 #-----------------------------------------------------------------------------------------------------------------------------------------
         def alterar_bind(self,event):
                 s_e = self.tv.selection()
                 iid_s  = s_e[0]
                 item_valores = self.tv.item(iid_s, 'values')
+                self.e_nome.delete(0, ttk.END)
+                self.e_descricao.delete(0, ttk.END)
+                self.e_categoria.delete(0, ttk.END)
+                self.e_valor.delete(0, ttk.END)
+                
                 self.e_nome.insert(0, item_valores[1])
                 self.e_descricao.insert(0, item_valores[2])
                 self.e_valor.insert(0, item_valores[3])
@@ -171,29 +192,41 @@ prato é uma oferenda inspirada na dualidade da bruxa Morgana: cura e maldição
 #-----------------------------------------------------------------------------------------------------------------------------------------
         def alterar(self):
                 s_e = self.tv.selection()
-                iid_s  = s_e[0]
-                item_valores = self.tv.item(iid_s, 'values')
-                codigo_do_registro_II = item_valores[0]
+                
+                if s_e:
+                        iid_s  = s_e[0]
+                        item_valores = self.tv.item(iid_s, 'values')
+                        codigo_do_registro_II = item_valores[0]
 
 
-                self.n_II = self.e_nome.get()
-                self.d_II = self.e_descricao.get()
-                self.v_II = self.e_valor.get()
-                self.c_II = self.e_categoria.get()        
+                        self.n_II = self.e_nome.get()
+                        self.d_II = self.e_descricao.get()
+                        self.v_II = self.e_valor.get()
+                        self.c_II = self.e_categoria.get()        
 
-                conexao_III = sqlite3.connect("bd_menu_restaurante.sqlite")
-                cursor_III = conexao_III.cursor()
+                        if self.c_II == "" or self.v_II == "" or self.n_II == "" or self.d_II == "":
+                                tkinter.messagebox.showerror(title="Erro", message="É necessário selecionar um item!")  
+                        else:
+                                conexao_III = sqlite3.connect("bd_menu_restaurante.sqlite")
+                                cursor_III = conexao_III.cursor()
 
-                sql_para_alterar_itens = """
-                                        UPDATE menu
-                                        SET nome = ?, descricao = ?, preco = ?, categoria = ?
-                                        WHERE codigo = ?
-                                        """
+                                sql_para_alterar_itens = """
+                                                        UPDATE menu
+                                                        SET nome = ?, descricao = ?, preco = ?, categoria = ?
+                                                        WHERE codigo = ?
+                                                        """
 
-                cursor_III.execute(sql_para_alterar_itens, [self.n_II, self.d_II,self.v_II,self.c_II,codigo_do_registro_II])
-                conexao_III.commit()
-                conexao_III.close()
-                self.atualizar_tv()     
+                                cursor_III.execute(sql_para_alterar_itens, [self.n_II, self.d_II,self.v_II,self.c_II,codigo_do_registro_II])
+                                conexao_III.commit()
+                                conexao_III.close()
+                                
+                                self.e_nome.delete(0, ttk.END)
+                                self.e_descricao.delete(0, ttk.END)
+                                self.e_categoria.delete(0, ttk.END)
+                                self.e_valor.delete(0, ttk.END)
+                                self.atualizar_tv() 
+                else:
+                        tkinter.messagebox.showerror(title="Erro", message="É necessário selecionar um item!")    
 #-----------------------------------------------------------------------------------------------------------------------------------------
         def exportar_menu(self):
                 self.conexao_IV = sqlite3.connect("bd_menu_restaurante.sqlite")
